@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String        @id @default(uuid())
+  name               String        @db.VarChar(255)
+  father_name        String?       @db.VarChar(255)
+  mother_name        String?       @db.VarChar(255)
+  mobile_number      String        @db.VarChar(10)
+  email              String        @unique
+  dob                String        @db.VarChar(255)
+  place_of_birth     String?       @db.VarChar(255)
+  marital_status     String?       @db.VarChar(255)
+  nationality        String?       @db.VarChar(255)
+  present_add        String?       @db.VarChar(255)
+  permanent_add      String?       @db.VarChar(255)
+  isactive           Boolean?      @default(false)
+  photo              String?       @default("default.png")
+  verified           Boolean?      @default(false)
+  password           String
+  role               RoleEnumType? @default(user)
+  verificationCode   String?       @unique @db.Text
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  provider           String?
+  passwordResetToken String?
+  passwordResetAt    DateTime?
+
+  @@unique([email, verificationCode, passwordResetToken])
+  @@index([email, verificationCode, passwordResetToken])
+  @@map(name: "users")
+}
+
+enum RoleEnumType {
+  user
+  admin
+}
+
+model user_registration {
+  id             Int      @id @default(autoincrement())
+  fullname       String   @db.VarChar(255)
+  father_name    String?  @db.VarChar(255)
+  mother_name    String?  @db.VarChar(255)
+  mobile_number  String?  @db.VarChar(10)
+  email          String   @unique
+  dob            String   @db.VarChar(255)
+  place_of_birth String?  @db.VarChar(255)
+  marital_status String?  @db.VarChar(255)
+  nationality    String?  @db.VarChar(255)
+  present_add    String?  @db.VarChar(255)
+  permanent_add  String?  @db.VarChar(255)
+  isactive       Boolean? @default(false)
+}
